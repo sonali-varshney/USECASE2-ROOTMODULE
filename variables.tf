@@ -82,11 +82,5 @@ variable "ami"{
 variable "instance_type"{
     default = "t3.micro"
 }
-variable "ami"{
-    default = "ami-00ca32bbc84273381"
-}
 
-variable "subnet_pub_id"{
-    default = module.vpc.pubsubnet
-}
 

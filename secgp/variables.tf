@@ -5,4 +5,3 @@ variable "web_sec_gp_name"{} #"web_sec_gp"
 variable "ssh_port"{}
 variable "http_port"{}
 variable "db_sec_gp_name"{}
-variable "db_sec_gp_name"{}
