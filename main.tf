@@ -4,7 +4,7 @@ module "ec2"{
     ami = var.ami
     instance_type = var.instance_type
     subnet_pub_id = module.vpc.pubsubnet
-    ec2_sec_gp = module.secgp.ec2_sec_gp
+    ec2_sec_gp = [module.secgp.ec2_sec_gp]   #Note it returns a set of string that's why [] me likha h
     subnet_id = module.vpc.pubsubnet
     web_sec_gp_name = var.web_sec_gp_name
     ec2_sec_gp_name = var.ec2_sec_gp_name
