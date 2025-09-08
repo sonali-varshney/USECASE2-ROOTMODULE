@@ -6,3 +6,4 @@ variable "instance_class"{} #"db.t3.micro"
 variable "username"{} #"foo"
 variable "password"{} #"foobarbaz"
 variable "subnet_ids"{}
+variable "vpc_db_security_group_ids"{}

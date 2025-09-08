@@ -1,11 +1,13 @@
 module "ec2"{
-    count = 2
     source = "./ec2"
     pub_cidr_block = var.pub_cidr_block
     ami = var.ami
     instance_type = var.instance_type
-    subnet_pub_id = var.subnet_pub_id[count.index]
+    subnet_pub_id = module.vpc.pubsubnet
     ec2_sec_gp = module.secgp.ec2_sec_gp
+    subnet_id = module.vpc.pubsubnet
+    web_sec_gp_name = var.web_sec_gp_name
+    ec2_sec_gp_name = var.ec2_sec_gp_name
 }
 
 module "secgp"{
@@ -29,7 +31,7 @@ module "rds"{
     username = var.username
     password = var.password
     subnet_ids = module.vpc.prvsubnet
-    vpc_db_security_group_ids = module.secgp.db_sec_gp
+    vpc_db_security_group_ids = [module.secgp.db_sec_gp]
 }
 
 module "vpc"{

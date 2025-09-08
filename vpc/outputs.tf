@@ -7,5 +7,5 @@ output "vpcid"{
 }
 
 output "prvsubnet"{
-aws_subnet.prv_subnet[*].id
+    value = aws_subnet.prv_subnet[*].id
 }
