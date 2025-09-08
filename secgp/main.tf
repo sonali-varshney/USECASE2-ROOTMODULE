@@ -37,7 +37,7 @@ resource "aws_security_group" "web_sg" {
 resource "aws_security_group" "db_sec_gp" {
   name        = var.db_sec_gp_name #"db_sec_gp"
   description = "Allow TLS inbound traffic and all outbound traffic"
-  vpc_id      = aws_vpc.vpcdemo.id
+  vpc_id      = var.vpc_id
 
   tags = {
     Name = "db_secgp"
