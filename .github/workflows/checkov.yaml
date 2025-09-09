@@ -1,0 +1,61 @@
+name: Sample github workflow
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:    # NOTE
+      id-token: write
+      contents: read
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v5.0.0
+     
+     - name: Setup Terraform
+       uses: hashicorp/setup-terraform@v3
+       with:
+          terraform_version: 1.5.0
+     
+     - name: "Configure AWS Credentials"
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         aws-region: us-east-1
+         role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}  #created a secret for storing role_arn. ARN of the role to assume.
+         # aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+         # aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+
+   #  - name: Test AWS Connection
+   #    run:  aws sts get-caller-identity # if it is succeeded , it will show assumed IAM role. It will fail if you slct another branch bcz in OIDC we gave main branch
+        
+     - name: init
+       run: terraform init
+
+     - name: Checkov GitHub Action
+       uses: bridgecrewio/checkov-action@v12.1347.0
+       with:
+         directory: # The directory containing your Terraform code, default is .
+         soft_fail: false #If true, the action will fail if any policies are violated# do not return an error code if there are failed checks
+         framework: terraform # Specifies the framework to scan (e.g., terraform, k8s, dockerfile)
+         # skip_check: CKV_AWS_20,CKV_TF_1 #If a specific Checkov policy is not relevant to your project, you can skip it using the skip_check parameter. You can specify a comma-separated list of check IDs
+         # download_external_modules: # optionalIf your Terraform code uses modules from a public registry, ensure they are also scanned by setting --download-external-modules to true. 
+
+     - name: Upload Checkov SARIF report to GitHub
+       uses: github/codeql-action/upload-sarif@v3
+       with:
+         sarif_file: checkov_results.sarif
+         
+     - name: validate
+       run: terraform validate     
+     - name: plan
+       run: terraform plan
+
+    #  - name: apply
+    #    run: terraform apply -auto-approve
+
+    #  - name: destroy
+    #    run: terraform destroy -auto-approve
+      
+      
+        
